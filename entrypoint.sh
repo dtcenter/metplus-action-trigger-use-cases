@@ -12,23 +12,28 @@ input_component=$(basename "${GITHUB_REPOSITORY}")
 # use METplus component versions script to determine METplus main_vX.Y branch
 metplus_branch=develop
 if [ "${input_version}" != "develop" ]; then
+
+  # get METplus develop branch to get component versions script
+  # and to query remote to check for existence of branch
   git clone --single-branch --branch develop https://github.com/dtcenter/METplus
+
   cmd="./METplus/metplus/component_versions.py -i ${input_component} -v ${input_version} -o METplus -f main_v{X}.{Y}"
   echo "$cmd"
   metplus_branch=$($cmd)
-fi
 
-# if no branch can be determined, exit and error
-if [ -z "${metplus_branch}" ]; then
-  echo "ERROR: Could not get METplus branch"
-  exit 1
-fi
+  # if no branch can be determined, exit and error
+  if [ -z "${metplus_branch}" ]; then
+    echo "ERROR: Could not get METplus branch"
+    exit 1
+  fi
 
-# if branch doesn't exist in remote, do not trigger METplus workflow
-branch_exists=$(git -C ./METplus ls-remote origin "${metplus_branch}")
-if [ -z "${branch_exists}" ]; then
-  echo "WARNING: METplus branch ${metplus_branch} does not exist yet"
-  exit 0
+  # if branch doesn't exist in remote, do not trigger METplus workflow
+  branch_exists=$(git -C ./METplus ls-remote origin "${metplus_branch}")
+  if [ -z "${branch_exists}" ]; then
+    echo "WARNING: METplus branch ${metplus_branch} does not exist yet"
+    exit 0
+  fi
+
 fi
 
 # set env var to authenticate GitHub API
