@@ -13,7 +13,7 @@ input_component=$(basename "${GITHUB_REPOSITORY}")
 metplus_branch=develop
 if [ "${input_version}" != "develop" ]; then
   git clone --single-branch --branch develop https://github.com/dtcenter/METplus
-  cmd="./METplus/metplus/component_versions.py -i ${input_component} -v ${input_version} -o METplus -f main_v{X}.{Y}"
+  cmd="./METplus/metplus/component_versions.py -i METplotpy -v ${input_version} -o METplus -f main_v{X}.{Y}"
   echo "$cmd"
   metplus_branch=$($cmd)
 fi
