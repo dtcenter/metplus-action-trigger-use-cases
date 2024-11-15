@@ -1,0 +1,12 @@
+name: 'Trigger METplus use case tests'
+description: 'Trigger a METplus testing workflow to ensure that changes to other METplus component repositories do not break METplus use case functionality.'
+inputs:
+  token:
+    description: 'GitHub token'
+    required: true
+
+runs:
+  using: 'docker'
+  image: 'Dockerfile'
+  args:
+    - ${{ inputs.token }}
